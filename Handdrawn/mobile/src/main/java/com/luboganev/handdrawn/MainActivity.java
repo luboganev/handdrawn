@@ -2,9 +2,8 @@ package com.luboganev.handdrawn;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 
 import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar;
 
@@ -12,11 +11,15 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
 
 public class MainActivity extends AppCompatActivity implements RangeSeekBar.OnRangeSeekBarChangeListener {
     @InjectView(R.id.drawingView) DrawingView drawingView;
     @InjectView(R.id.rangebar) RangeSeekBar<Integer> rangeBar;
+    @InjectView(R.id.action_clear) ImageButton clearImageButton;
+    @InjectView(R.id.action_set_draw_mode) ImageButton drawImageButton;
+    @InjectView(R.id.action_set_present_mode) ImageButton presentImageButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,58 +29,47 @@ public class MainActivity extends AppCompatActivity implements RangeSeekBar.OnRa
 
         rangeBar.setOnRangeSeekBarChangeListener(this);
         rangeBar.setNotifyWhileDragging(true);
+        updateControlPanelButtons();
+        updateRangeBar(0);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        if (drawingView != null) {
-            if (drawingView.getMode() == DrawingView.MODE_DRAW) {
-                menu.findItem(R.id.action_clear).setVisible(true);
-                menu.findItem(R.id.action_set_draw_mode).setVisible(false);
-                menu.findItem(R.id.action_set_present_mode).setVisible(true);
-            } else {
-                menu.findItem(R.id.action_clear).setVisible(false);
-                menu.findItem(R.id.action_set_draw_mode).setVisible(true);
-                menu.findItem(R.id.action_set_present_mode).setVisible(false);
-            }
+    private void updateControlPanelButtons() {
+        if (drawingView.getMode() == DrawingView.MODE_DRAW) {
+            clearImageButton.setVisibility(View.VISIBLE);
+            drawImageButton.setVisibility(View.GONE);
+            presentImageButton.setVisibility(View.VISIBLE);
+        } else {
+            clearImageButton.setVisibility(View.GONE);
+            drawImageButton.setVisibility(View.VISIBLE);
+            presentImageButton.setVisibility(View.GONE);
         }
-        return super.onPrepareOptionsMenu(menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_clear:
-                if (drawingView.getMode() != DrawingView.MODE_DRAW) {
-                    drawingView.setMode(DrawingView.MODE_DRAW);
-                } else {
-                    drawingView.clearCanvas();
-                }
-                rangeBar.setVisibility(View.GONE);
-                return true;
-            case R.id.action_set_draw_mode:
-                drawingView.setMode(DrawingView.MODE_DRAW);
-                rangeBar.setVisibility(View.GONE);
-                invalidateOptionsMenu();
-                return true;
-            case R.id.action_set_present_mode:
-                List<TimedPoint> points = drawingView.getTimedPointsCopy();
-                drawingView.setMode(DrawingView.MODE_PRESENT);
-                updateRangeBar(points.size() - 1);
-                rangeBar.setVisibility(View.VISIBLE);
-                drawingView.setTimedPoints(points);
-                invalidateOptionsMenu();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+    @OnClick(R.id.action_clear)
+    void onActionClear() {
+        if (drawingView.getMode() != DrawingView.MODE_DRAW) {
+            drawingView.setMode(DrawingView.MODE_DRAW);
+        } else {
+            drawingView.clearCanvas();
         }
+        rangeBar.setVisibility(View.GONE);
+    }
+
+    @OnClick(R.id.action_set_draw_mode)
+    void onActionSetDrawMode() {
+        drawingView.setMode(DrawingView.MODE_DRAW);
+        rangeBar.setVisibility(View.GONE);
+        updateControlPanelButtons();
+    }
+
+    @OnClick(R.id.action_set_present_mode)
+    void onActionSetPresentMode() {
+        List<TimedPoint> points = drawingView.getTimedPointsCopy();
+        drawingView.setMode(DrawingView.MODE_PRESENT);
+        updateRangeBar(points.size() - 1);
+        rangeBar.setVisibility(View.VISIBLE);
+        drawingView.setTimedPoints(points);
+        updateControlPanelButtons();
     }
 
     public void updateRangeBar(int maxValue) {

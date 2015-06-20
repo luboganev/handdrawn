@@ -1,0 +1,68 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical"
+    tools:ignore="RtlHardcoded">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="4dp">
+
+        <com.luboganev.handdrawn.DrawingView
+            android:id="@+id/drawingView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </android.support.v7.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/darkgrey"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+
+        <ImageButton
+            android:id="@+id/action_clear"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginRight="8dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_delete_white_24dp" />
+
+        <ImageButton
+            android:id="@+id/action_set_draw_mode"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginRight="8dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_gesture_white_24dp" />
+
+        <ImageButton
+            android:id="@+id/action_set_present_mode"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/ic_search_white_24dp"
+            android:layout_gravity="center_vertical"/>
+
+        <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
+            android:id="@+id/rangebar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:absoluteMaxValue="150"
+            app:absoluteMinValue="20"
+            />
+    </LinearLayout>
+</LinearLayout>
