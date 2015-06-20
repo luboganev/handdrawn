@@ -36,6 +36,22 @@ public class MainActivity extends AppCompatActivity implements RangeSeekBar.OnRa
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (drawingView != null) {
+            if (drawingView.getMode() == DrawingView.MODE_DRAW) {
+                menu.findItem(R.id.action_clear).setVisible(true);
+                menu.findItem(R.id.action_set_draw_mode).setVisible(false);
+                menu.findItem(R.id.action_set_present_mode).setVisible(true);
+            } else {
+                menu.findItem(R.id.action_clear).setVisible(false);
+                menu.findItem(R.id.action_set_draw_mode).setVisible(true);
+                menu.findItem(R.id.action_set_present_mode).setVisible(false);
+            }
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_clear:
@@ -49,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements RangeSeekBar.OnRa
             case R.id.action_set_draw_mode:
                 drawingView.setMode(DrawingView.MODE_DRAW);
                 rangeBar.setVisibility(View.GONE);
+                invalidateOptionsMenu();
                 return true;
             case R.id.action_set_present_mode:
                 List<TimedPoint> points = drawingView.getTimedPointsCopy();
@@ -56,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements RangeSeekBar.OnRa
                 updateRangeBar(points.size() - 1);
                 rangeBar.setVisibility(View.VISIBLE);
                 drawingView.setTimedPoints(points);
+                invalidateOptionsMenu();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
