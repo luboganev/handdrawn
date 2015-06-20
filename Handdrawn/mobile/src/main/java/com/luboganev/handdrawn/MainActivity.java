@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements RangeSeekBar.OnRa
     @InjectView(R.id.action_clear) ImageView clearImageView;
     @InjectView(R.id.action_set_draw_mode) ImageView drawImageView;
     @InjectView(R.id.action_set_present_mode) ImageView presentImageView;
-    @InjectView(R.id.action_info) ImageView showInfoImageView;
+    @InjectView(R.id.tutorialOverlay) View tutorialOverlayView;
     @InjectView(R.id.logo) ImageView logoImageView;
 
     @Override
@@ -36,9 +36,6 @@ public class MainActivity extends AppCompatActivity implements RangeSeekBar.OnRa
             public boolean onLongClick(View v) {
                 int messageResourceId = -1;
                 switch (v.getId()) {
-                    case R.id.action_info:
-                        messageResourceId = R.string.hint_toast_info;
-                        break;
                     case R.id.action_clear:
                         messageResourceId = R.string.hint_toast_clear;
                         break;
@@ -60,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements RangeSeekBar.OnRa
         clearImageView.setOnLongClickListener(listener);
         drawImageView.setOnLongClickListener(listener);
         presentImageView.setOnLongClickListener(listener);
-        showInfoImageView.setOnLongClickListener(listener);
 
         rangeBar.setOnRangeSeekBarChangeListener(this);
         rangeBar.setNotifyWhileDragging(true);
@@ -83,19 +79,25 @@ public class MainActivity extends AppCompatActivity implements RangeSeekBar.OnRa
     private Runnable mHideTutorialRunnable = new Runnable() {
         @Override
         public void run() {
-            drawingView.setBackground(null);
+            tutorialOverlayView.setVisibility(View.INVISIBLE);
         }
     };
 
-    @OnClick({R.id.action_info, R.id.logo})
+    private void hideTutorialNow() {
+        tutorialOverlayView.removeCallbacks(mHideTutorialRunnable);
+        tutorialOverlayView.setVisibility(View.INVISIBLE);
+    }
+
+    @OnClick(R.id.logo)
     void onActionInfo() {
-        drawingView.setBackgroundResource(R.drawable.tutorial_background);
-        drawingView.removeCallbacks(mHideTutorialRunnable);
-        drawingView.postDelayed(mHideTutorialRunnable, 3000);
+        tutorialOverlayView.setVisibility(View.VISIBLE);
+        tutorialOverlayView.removeCallbacks(mHideTutorialRunnable);
+        tutorialOverlayView.postDelayed(mHideTutorialRunnable, 3000);
     }
 
     @OnClick(R.id.action_clear)
     void onActionClear() {
+        hideTutorialNow();
         if (drawingView.getMode() != DrawingView.MODE_DRAW) {
             drawingView.setMode(DrawingView.MODE_DRAW);
         } else {
