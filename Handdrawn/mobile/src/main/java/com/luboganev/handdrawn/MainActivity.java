@@ -1,17 +1,31 @@
 package com.luboganev.handdrawn;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar;
+
+import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity implements RangeSeekBar.OnRangeSeekBarChangeListener {
+    @InjectView(R.id.drawingView) DrawingView drawingView;
+    @InjectView(R.id.rangebar) RangeSeekBar<Integer> rangeBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.inject(this);
+
+        rangeBar.setOnRangeSeekBarChangeListener(this);
+        rangeBar.setNotifyWhileDragging(true);
     }
 
     @Override
@@ -23,16 +37,44 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_clear:
+                if (drawingView.getMode() != DrawingView.MODE_DRAW) {
+                    drawingView.setMode(DrawingView.MODE_DRAW);
+                } else {
+                    drawingView.clearCanvas();
+                }
+                rangeBar.setVisibility(View.GONE);
+                return true;
+            case R.id.action_set_draw_mode:
+                drawingView.setMode(DrawingView.MODE_DRAW);
+                rangeBar.setVisibility(View.GONE);
+                return true;
+            case R.id.action_set_present_mode:
+                List<TimedPoint> points = drawingView.getTimedPointsCopy();
+                drawingView.setMode(DrawingView.MODE_PRESENT);
+                updateRangeBar(points.size() - 1);
+                rangeBar.setVisibility(View.VISIBLE);
+                drawingView.setTimedPoints(points);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
+    }
 
-        return super.onOptionsItemSelected(item);
+    public void updateRangeBar(int maxValue) {
+        if(rangeBar != null) {
+            rangeBar.setOnRangeSeekBarChangeListener(null);
+            rangeBar.setRangeValues(0, maxValue);
+            rangeBar.setSelectedMinValue(0);
+            rangeBar.setSelectedMaxValue(maxValue);
+            rangeBar.setOnRangeSeekBarChangeListener(this);
+        }
+    }
+
+    @Override
+    public void onRangeSeekBarValuesChanged(RangeSeekBar rangeSeekBar, Object o, Object t1) {
+        drawingView.presentPointsRange(rangeSeekBar.getSelectedMinValue().intValue(),
+                rangeSeekBar.getSelectedMaxValue().intValue());
     }
 }
