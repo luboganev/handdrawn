@@ -23,6 +23,7 @@ android {
         wearApp project(':wear')
         compile project(':shared')
 
+        compile 'com.google.android.gms:play-services-wearable:7.5.0'
         compile 'com.android.support:appcompat-v7:22.2.0'
         compile 'com.android.support:support-v4:22.2.0'
         compile 'com.android.support:cardview-v7:22.2.0'
