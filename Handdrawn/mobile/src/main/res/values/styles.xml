@@ -11,4 +11,25 @@
         <item name="colorAccent">@color/pinkAccent</item>
     </style>
 
+    <style name="risedview">
+    </style>
+
+    <style name="legend_view">
+        <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/button_bg</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+    <style name="AboutHeaderStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">#ff767676</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+
+    <style name="AboutContentStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">#ff767676</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
 </resources>

@@ -11,5 +11,6 @@
     <string name="hint_toast_clear">Clear the board</string>
     <string name="hint_toast_draw_mode">Switch to draw mode</string>
     <string name="hint_toast_present_mode">Switch to analyse mode</string>
+    <string name="sensor_data_empy_state">Waiting for watch data</string>
 
 </resources>
