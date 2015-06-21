@@ -1,6 +1,7 @@
 package com.luboganev.handdrawn.events;
 
-import com.github.pocmo.sensordashboard.data.Sensor;
+
+import com.luboganev.handdrawn.data.Sensor;
 
 public class NewSensorEvent {
     private Sensor sensor;
