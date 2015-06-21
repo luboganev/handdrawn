@@ -12,9 +12,24 @@ android {
         versionName "1.0"
     }
     buildTypes {
+        debug {
+
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    productFlavors {
+        live {
+            applicationId = android.defaultConfig.applicationId
+            versionName = android.defaultConfig.versionName
+        }
+        dev {
+            applicationId = android.defaultConfig.applicationId + ".dev"
+            versionName = android.defaultConfig.versionName + "-DEV"
         }
     }
 
